@@ -10,14 +10,14 @@ ENV PYTHONUNBUFFERED=1 \
     PADDLEOCR_NO_CACHE=1 \
     KMP_DUPLICATE_LIB_OK=TRUE
 
-# 安装系统依赖
+# 安装系统依赖（使用libgl1替代已弃用的libgl1-mesa-glx）
 RUN apt-get update && apt-get install -y \
     libgomp1 \
     libglib2.0-0 \
     libsm6 \
     libxext6 \
     libxrender-dev \
-    libgl1-mesa-glx \
+    libgl1 \
     && rm -rf /var/lib/apt/lists/*
 
 # 复制依赖文件
