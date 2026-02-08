@@ -93,7 +93,16 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    """详细健康检查"""
+    """简单健康检查（仅检查服务是否运行）"""
+    return {
+        "service": "食品标签OCR识别服务",
+        "status": "running"
+    }
+
+
+@app.get("/health/detailed")
+async def detailed_health_check():
+    """详细健康检查（包含OCR引擎状态）"""
     try:
         # 尝试初始化OCR引擎
         engine = get_ocr_engine()
