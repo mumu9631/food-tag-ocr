@@ -1,0 +1,4 @@
+# 模拟OCR服务（仅需FastAPI，无需OCR引擎）
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.5.0

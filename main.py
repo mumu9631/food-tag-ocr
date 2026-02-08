@@ -45,14 +45,8 @@ def get_ocr_engine():
     if ocr is None:
         logger.info("初始化PaddleOCR引擎...")
         ocr = paddleocr.PaddleOCR(
-            use_angle_cls=True,      # 启用方向分类器
-            lang='ch',               # 中文识别
-            use_gpu=False,           # 云平台无GPU
-            show_log=False,          # 关闭PaddleOCR日志
-            det_db_thresh=0.3,       # 检测阈值（降低以检测更多文字）
-            det_db_box_thresh=0.5,   # 边框阈值
-            max_batch_size=10,       # 批处理大小
-            rec_batch_num=6          # 识别批次数
+            use_angle_cls=True,
+            lang='ch'
         )
         logger.info("PaddleOCR引擎初始化完成")
     return ocr
