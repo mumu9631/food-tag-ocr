@@ -269,21 +269,30 @@ def extract_text_lines(ocr_result) -> List[str]:
     text_lines = []
 
     if not ocr_result or len(ocr_result) == 0:
+        logger.warning("OCR结果为空")
         return text_lines
 
     try:
-        for line in ocr_result[0]:
+        logger.info(f"开始提取文本，ocr_result[0]长度: {len(ocr_result[0]) if ocr_result[0] else 0}")
+
+        for idx, line in enumerate(ocr_result[0]):
             # line格式: [[x1,y1], [x2,y2], [x3,y3], [x4,y4]], (text, confidence)
             if len(line) >= 2:
                 text = line[1][0] if line[1] else ""
                 confidence = line[1][1] if len(line[1]) > 1 else 0
 
-                # 过滤低置信度和空文本
-                if confidence > 0.5 and text.strip():
+                # 调试：打印前5个识别结果
+                if idx < 5:
+                    logger.info(f"识别结果[{idx}]: text='{text}', confidence={confidence:.3f}")
+
+                # 降低置信度阈值从0.5到0.3
+                if confidence > 0.3 and text.strip():
                     text_lines.append(text.strip())
 
+        logger.info(f"经过置信度过滤(>0.3)后，剩余{len(text_lines)}行文本")
+
     except Exception as e:
-        logger.error(f"提取文本失败: {str(e)}")
+        logger.error(f"提取文本失败: {str(e)}", exc_info=True)
 
     return text_lines
 
