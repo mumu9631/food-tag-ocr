@@ -54,13 +54,10 @@ def get_ocr_engine():
     if ocr is None:
         logger.info("初始化PaddleOCR引擎...")
         print("[DEBUG] 正在初始化PaddleOCR...")
+        # 使用最基础的参数，避免版本兼容问题
         ocr = paddleocr.PaddleOCR(
             use_angle_cls=True,  # 使用方向分类器
-            lang='ch',           # 中文
-            use_gpu=False,       # Railway没有GPU，使用CPU
-            det_db_thresh=0.3,   # 检测阈值（默认0.3，降低以提高检测率）
-            det_db_box_thresh=0.5,  # 框阈值（默认0.6，降低以提高检测率）
-            rec_batch_num=6      # 批处理识别数量
+            lang='ch'            # 中文
         )
         logger.info("PaddleOCR引擎初始化完成")
         print("[DEBUG] PaddleOCR初始化完成")
