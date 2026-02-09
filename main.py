@@ -329,8 +329,8 @@ def parse_food_label(text_lines: List[str]) -> Dict[str, Any]:
         'commodityBarcode': extract_barcode(full_text),
     }
 
-    # 清理空值
-    food_label = {k: v for k, v in food_label.items() if v is not None and v != ''}
+    # 清理空值（保留字段，但将None转为空字符串）
+    food_label = {k: (v if v is not None else '') for k, v in food_label.items()}
 
     return food_label
 
