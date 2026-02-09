@@ -135,6 +135,16 @@ async def recognize_food_label(request: OCRRequest):
         ocr_result = engine.ocr(img_data)
 
         # 3. 提取识别的文本
+        # 调试：打印OCR原始结果结构
+        logger.info(f"OCR原始结果类型: {type(ocr_result)}")
+        if ocr_result:
+            logger.info(f"OCR结果长度: {len(ocr_result)}")
+            if len(ocr_result) > 0:
+                logger.info(f"OCR结果[0]类型: {type(ocr_result[0])}")
+                if ocr_result[0]:
+                    logger.info(f"OCR结果[0]长度: {len(ocr_result[0])}")
+                    logger.info(f"OCR结果[0]前3项: {ocr_result[0][:3]}")
+
         text_lines = extract_text_lines(ocr_result)
         logger.info(f"识别到 {len(text_lines)} 行文本")
 
