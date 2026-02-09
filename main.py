@@ -58,7 +58,6 @@ def get_ocr_engine():
             use_angle_cls=True,  # 使用方向分类器
             lang='ch',           # 中文
             use_gpu=False,       # Railway没有GPU，使用CPU
-            show_log=False,      # 关闭PaddleOCR自己的日志（避免干扰）
             det_db_thresh=0.3,   # 检测阈值（默认0.3，降低以提高检测率）
             det_db_box_thresh=0.5,  # 框阈值（默认0.6，降低以提高检测率）
             rec_batch_num=6      # 批处理识别数量
