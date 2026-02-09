@@ -145,11 +145,11 @@ async def recognize_food_label(request: OCRRequest):
         print(f"[DEBUG] 图片下载完成，数据长度: {len(img_data)} bytes")
         logger.info(f"图片下载完成，数据长度: {len(img_data)} bytes")
 
-        # 2. PaddleOCR识别（使用更宽松的参数）
+        # 2. PaddleOCR识别
         engine = get_ocr_engine()
         print(f"[DEBUG] 开始调用PaddleOCR...")
         logger.info("开始调用PaddleOCR...")
-        ocr_result = engine.ocr(img_data, cls=True, det=True, rec=True)
+        ocr_result = engine.ocr(img_data)
         print(f"[DEBUG] PaddleOCR调用完成")
         logger.info("PaddleOCR调用完成")
 
