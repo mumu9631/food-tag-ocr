@@ -132,7 +132,7 @@ async def recognize_food_label(request: OCRRequest):
 
         # 2. PaddleOCR识别
         engine = get_ocr_engine()
-        ocr_result = engine.ocr(img_data, cls=True)
+        ocr_result = engine.ocr(img_data)
 
         # 3. 提取识别的文本
         text_lines = extract_text_lines(ocr_result)
