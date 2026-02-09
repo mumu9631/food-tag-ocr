@@ -53,11 +53,18 @@ def get_ocr_engine():
     global ocr
     if ocr is None:
         logger.info("初始化PaddleOCR引擎...")
+        print("[DEBUG] 正在初始化PaddleOCR...")
         ocr = paddleocr.PaddleOCR(
-            use_angle_cls=True,
-            lang='ch'
+            use_angle_cls=True,  # 使用方向分类器
+            lang='ch',           # 中文
+            use_gpu=False,       # Railway没有GPU，使用CPU
+            show_log=False,      # 关闭PaddleOCR自己的日志（避免干扰）
+            det_db_thresh=0.3,   # 检测阈值（默认0.3，降低以提高检测率）
+            det_db_box_thresh=0.5,  # 框阈值（默认0.6，降低以提高检测率）
+            rec_batch_num=6      # 批处理识别数量
         )
         logger.info("PaddleOCR引擎初始化完成")
+        print("[DEBUG] PaddleOCR初始化完成")
     return ocr
 
 
@@ -134,14 +141,21 @@ async def recognize_food_label(request: OCRRequest):
     start_time = datetime.now()
 
     try:
+        print(f"[DEBUG] 开始识别图片: {request.imageUrl}")
         logger.info(f"开始识别图片: {request.imageUrl}")
 
         # 1. 下载图片
         img_data = download_image(request.imageUrl)
+        print(f"[DEBUG] 图片下载完成，数据长度: {len(img_data)} bytes")
+        logger.info(f"图片下载完成，数据长度: {len(img_data)} bytes")
 
-        # 2. PaddleOCR识别
+        # 2. PaddleOCR识别（使用更宽松的参数）
         engine = get_ocr_engine()
-        ocr_result = engine.ocr(img_data)
+        print(f"[DEBUG] 开始调用PaddleOCR...")
+        logger.info("开始调用PaddleOCR...")
+        ocr_result = engine.ocr(img_data, cls=True, det=True, rec=True)
+        print(f"[DEBUG] PaddleOCR调用完成")
+        logger.info("PaddleOCR调用完成")
 
         # 3. 提取识别的文本
         # 调试：打印OCR原始结果结构
@@ -293,17 +307,17 @@ def extract_text_lines(ocr_result) -> List[str]:
                 text = line[1][0] if line[1] else ""
                 confidence = line[1][1] if len(line[1]) > 1 else 0
 
-                # 调试：打印前5个识别结果
-                if idx < 5:
+                # 调试：打印前10个识别结果（增加到10个）
+                if idx < 10:
                     print(f"[DEBUG] 识别结果[{idx}]: text='{text}', confidence={confidence:.3f}")
                     logger.info(f"识别结果[{idx}]: text='{text}', confidence={confidence:.3f}")
 
-                # 降低置信度阈值从0.5到0.3
-                if confidence > 0.3 and text.strip():
+                # 降低置信度阈值到0.1（几乎不过滤，先看是否有识别结果）
+                if confidence > 0.1 and text.strip():
                     text_lines.append(text.strip())
 
-        print(f"[DEBUG] 经过置信度过滤(>0.3)后，剩余{len(text_lines)}行文本")
-        logger.info(f"经过置信度过滤(>0.3)后，剩余{len(text_lines)}行文本")
+        print(f"[DEBUG] 经过置信度过滤(>0.1)后，剩余{len(text_lines)}行文本")
+        logger.info(f"经过置信度过滤(>0.1)后，剩余{len(text_lines)}行文本")
 
     except Exception as e:
         logger.error(f"提取文本失败: {str(e)}", exc_info=True)
