@@ -1,0 +1,20 @@
+# FastAPI和Web服务器
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+python-multipart>=0.0.6
+
+# PaddleOCR和深度学习框架（使用最新版本以支持Python 3.14）
+paddlepaddle>=2.6.0
+paddleocr>=2.7.0
+
+# 图像处理
+Pillow>=10.0.0
+
+# HTTP请求
+requests>=2.31.0
+
+# 数据验证
+pydantic>=2.5.0
+
+# 日志和工具
+python-dotenv>=1.0.0
