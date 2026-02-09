@@ -13,6 +13,7 @@ from PIL import Image
 import io
 import re
 import os
+import sys
 import logging
 from datetime import datetime
 
@@ -20,8 +21,12 @@ from datetime import datetime
 os.environ['PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK'] = 'True'
 os.environ['PADDLE_SKIP_CHECK_DYNAMIC_LIBRARY'] = 'True'
 
-# 配置日志
-logging.basicConfig(level=logging.INFO)
+# 配置日志（输出到stdout，以便Railway显示）
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[logging.StreamHandler(sys.stdout)]
+)
 logger = logging.getLogger(__name__)
 
 # 创建FastAPI应用
