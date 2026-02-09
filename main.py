@@ -16,6 +16,10 @@ import os
 import logging
 from datetime import datetime
 
+# 禁用PaddlePaddle模型源检查（必须在使用paddleocr之前设置）
+os.environ['PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK'] = 'True'
+os.environ['PADDLE_SKIP_CHECK_DYNAMIC_LIBRARY'] = 'True'
+
 # 配置日志
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
