@@ -138,6 +138,12 @@ async def recognize_food_label(request: OCRRequest):
         text_lines = extract_text_lines(ocr_result)
         logger.info(f"识别到 {len(text_lines)} 行文本")
 
+        # 调试：打印前10行识别的文本
+        if text_lines:
+            logger.info(f"前10行文本: {text_lines[:10]}")
+        else:
+            logger.warning("未识别到任何文本！")
+
         # 4. 智能解析13项食品标签内容
         food_label = parse_food_label(text_lines)
 
