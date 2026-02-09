@@ -145,16 +145,22 @@ async def recognize_food_label(request: OCRRequest):
 
         # 3. 提取识别的文本
         # 调试：打印OCR原始结果结构
+        print(f"[DEBUG] OCR原始结果类型: {type(ocr_result)}")
         logger.info(f"OCR原始结果类型: {type(ocr_result)}")
         if ocr_result:
+            print(f"[DEBUG] OCR结果长度: {len(ocr_result)}")
             logger.info(f"OCR结果长度: {len(ocr_result)}")
             if len(ocr_result) > 0:
+                print(f"[DEBUG] OCR结果[0]类型: {type(ocr_result[0])}")
                 logger.info(f"OCR结果[0]类型: {type(ocr_result[0])}")
                 if ocr_result[0]:
+                    print(f"[DEBUG] OCR结果[0]长度: {len(ocr_result[0])}")
                     logger.info(f"OCR结果[0]长度: {len(ocr_result[0])}")
+                    print(f"[DEBUG] OCR结果[0]前3项: {ocr_result[0][:3]}")
                     logger.info(f"OCR结果[0]前3项: {ocr_result[0][:3]}")
 
         text_lines = extract_text_lines(ocr_result)
+        print(f"[DEBUG] 识别到 {len(text_lines)} 行文本")
         logger.info(f"识别到 {len(text_lines)} 行文本")
 
         # 调试：打印前10行识别的文本
@@ -278,6 +284,7 @@ def extract_text_lines(ocr_result) -> List[str]:
         return text_lines
 
     try:
+        print(f"[DEBUG] 开始提取文本，ocr_result[0]长度: {len(ocr_result[0]) if ocr_result[0] else 0}")
         logger.info(f"开始提取文本，ocr_result[0]长度: {len(ocr_result[0]) if ocr_result[0] else 0}")
 
         for idx, line in enumerate(ocr_result[0]):
@@ -288,12 +295,14 @@ def extract_text_lines(ocr_result) -> List[str]:
 
                 # 调试：打印前5个识别结果
                 if idx < 5:
+                    print(f"[DEBUG] 识别结果[{idx}]: text='{text}', confidence={confidence:.3f}")
                     logger.info(f"识别结果[{idx}]: text='{text}', confidence={confidence:.3f}")
 
                 # 降低置信度阈值从0.5到0.3
                 if confidence > 0.3 and text.strip():
                     text_lines.append(text.strip())
 
+        print(f"[DEBUG] 经过置信度过滤(>0.3)后，剩余{len(text_lines)}行文本")
         logger.info(f"经过置信度过滤(>0.3)后，剩余{len(text_lines)}行文本")
 
     except Exception as e:
